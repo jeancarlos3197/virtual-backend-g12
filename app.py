@@ -4,10 +4,31 @@ from datetime import datetime
 from flask_restful import Api
 
 from controllers.ingredientes import IngredientesController
+from config import conexion
 
 app = Flask(__name__)
 # creamos la instancia de flask_restful.Api y le indicamos que todo la configuracion que haremos se agregue anuestra instancia de Flask
 api = Api(app=app)
+
+# aca se almacenara todas las variables de configuracion de mi proyecto Flask, en ella se podran encontrar algunas variables como DEBUG y ENV, entre otras.
+# app.config es un diccionario en el cual se almacena las variables por Llave. Valor
+# print(app.config)
+
+# Ahora asignaremos la cadena de conexion a nuestra base de datos
+#                                  tipo://usuario:password@dominio:puerto/base_de_datos
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Aa123@127.0.0.1:3306/recetario'
+
+# para jalar la configuracion de mi flask y extraer su conexion a la base de datos
+conexion.init_app(app)
+
+# con el sgt comando indicaremos la creacion de todas las tablas en bd
+# emitira unerror si es que no hay ninguna tabla a crear
+# emitira unerror si no le hemos instalado el conector correctamente
+conexion.create_all(app=app)
+
+@app.route('/')
+def inicio():
+  return 'Bienvenido a mi API de recetas'
 
 @app.route('/status', methods=['GET'])
 def status():

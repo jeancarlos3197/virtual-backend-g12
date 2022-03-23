@@ -1,9 +1,11 @@
+from logging import exception
 from flask_restful import Resource, request
+from marshmallow.exceptions import ValidationError
+
 from config import conexion
 from models.ingredientes import Ingrediente
 from dtos.dto_prueba import ValidadorPrueba, ValidadorUsuarioPrueba
 from dtos.ingrediente_dto import IngredienteRequestDTO, IngredienteResponseDTO
-from marshmallow.exceptions import ValidationError
 # from marshmallow import validate
 # todos los metodos HTTP que vamos a utilizar se definen como metodos de la clase
 
@@ -87,3 +89,42 @@ class PruebaController(Resource):
       'content': usuario,
       'resultado': resultado
     }
+
+class IngredienteController(Resource):
+  def get(self, id):
+
+    ingrediente = conexion.session.query(Ingrediente).filter_by(id=id).first()
+    
+    if ingrediente:
+      resultado = IngredienteResponseDTO().dump(ingrediente)
+      return{
+        'resulta': resultado
+      }
+    else:
+      return {
+        'message': 'El ingrediente a buscar no existe'
+      }, 404
+  def put(self, id):
+    ingrediente = conexion.session.query(Ingrediente).filter_by(id=id).first()
+    
+    try:
+      if ingrediente:
+        body = request.get_json()
+        data_validada = IngredienteRequestDTO().load(body)
+        ingrediente.nombre = data_validada.get('nombre')
+        conexion.session.commit()
+        resultado = IngredienteResponseDTO().dump(ingrediente)
+        return {
+          'message': 'Ingrediente actualizado exitosamente',
+          'content': resultado
+        }
+      else:
+        return {
+          'message':'ingrediente a actualizar no existe'
+        }, 404
+    except Exception as e:
+      return {
+        'message': 'Error al actualizar el ingrediente',
+        'content': e.args
+      },400
+  

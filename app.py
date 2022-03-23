@@ -2,7 +2,10 @@
 from flask import Flask
 from datetime import datetime
 from flask_restful import Api
+from dotenv import load_dotenv
+from os import environ
 
+# archivos creados
 from config import conexion, validador
 from controllers.ingredientes import (  IngredientesController, 
                                         PruebaController, 
@@ -13,6 +16,7 @@ from controllers.recetas import ( RecetasController,
 from controllers.preparaciones import PreparacionesController
 from controllers.ingredientes_recetas import ( IngredientesRecetasController, )
 
+load_dotenv()
 
 app = Flask(__name__)
 # creamos la instancia de flask_restful.Api y le indicamos que todo la configuracion que haremos se agregue anuestra instancia de Flask
@@ -24,7 +28,7 @@ api = Api(app=app)
 
 # Ahora asignaremos la cadena de conexion a nuestra base de datos
 #                                  tipo://usuario:password@dominio:puerto/base_de_datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Aa123@127.0.0.1:3306/recetario'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 # Si se establece True entonces SQLALCHEMY rastreara las modificaciones de los objectos (modelos) y emitira señales cuando cambie algun modelo, su valor por defecto es None
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

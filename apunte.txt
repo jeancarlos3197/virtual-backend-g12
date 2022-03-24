@@ -2,7 +2,7 @@ python -m venv <nombre_entorno> > crea un entorno virtual
 (source optional for mac or linux) .\entorno_flask\Scripts\activate > Activar entorno
 pip install <libreria> >Instala la libreria 
              flask-cors > cors
-            
+             
 pip list > enlista mis libreria
 pip freeze > lista las librerias pero de una manera mas tecnica
 pip freeze > requirements.txt  >> crea en texto mis librerias con sus versiones

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>Hola bienvenido a mi API DE MONEDERO</p>
+    <p>Presentado por {{ nombre }} {{edad}}</p>
+    <p>Los galacticos osn:</p>
+    {# junja es una libreria que sirve para renderizar html's en el backend como
+    flask, django, rapify#}{#
+    https://jinja.palletsprojects.com/en/3.1.x/templates/#list-of-control-structures
+    #}
+    <ol>
+      {% for integrante in integrantes %}
+      <li>{{integrante}}</li>
+      {% endfor %}
+    </ol>
+    <p>El usuario es: {{usuario.nombre}}</p>
+    <table>
+      <tr>
+        <th>Nombre</th>
+        <th>Clasificado</th>
+      </tr>
+      {% for seleccion in selecciones %}
+      <tr>
+        <td>{{seleccion.nombre}}</td>
+        <td>
+          {%if seleccion.clasificado is true%} 'Nos vemos en qatar' {%elif
+          seleccion.clasificado is false%} 'Con suerte en el
+          proximo'{%else%}'Aun no se sabe' {%endif%}
+        </td>
+      </tr>
+      {%endfor%}
+    </table>
+  </body>
+</html>

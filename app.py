@@ -44,6 +44,14 @@ conexion.create_all(app=app)
 
 @app.route('/')
 def inicio():
+  # return '''<object
+  #   type="text/html"
+  #   data="https://ucsm.edu.pe/"
+  #   width="100%"
+  #   height="100%"
+  #   style="overflow: auto; "
+  # ></object>
+  # '''
   return 'Bienvenido a mi API de recetas'
 
 @app.route('/status', methods=['GET'])

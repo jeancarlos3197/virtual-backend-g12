@@ -1,6 +1,20 @@
 from flask import Flask, render_template
+from flask_restful import Api
+from os import environ
+from dotenv import load_dotenv
+
+from config import validador, conexion
+from controllers.usuarios import RegistroController
+
+load_dotenv()
 
 app=Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
+api = Api(app=app)
+validador.init_app(app)
+conexion.init_app(app)
+
+conexion.create_all(app=app)
 
 @app.route('/')
 def inicio():
@@ -22,5 +36,7 @@ def inicio():
     'timado':True
   }])
 
+api.add_resource(RegistroController, '/registro')
+
 if(__name__ == '__main__'):
-  app.run(debug=True)
+  app.run(debug=True, port=8080)

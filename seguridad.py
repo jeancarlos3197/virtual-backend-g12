@@ -27,10 +27,6 @@ def identificador(payload):
   usuarioEncontrado: Usuario | None = conexion.session.query(Usuario).filter_by(id = payload['identity']).first()
   if usuarioEncontrado:
     # esta información me servira para cuando quiera acceder al usuario actual de la petición 
-    return{
-      'id': usuarioEncontrado.id,
-      'nombre': usuarioEncontrado.nombre,
-      'correo': usuarioEncontrado.correo,
-    }
+    return usuarioEncontrado
   else:
     return None

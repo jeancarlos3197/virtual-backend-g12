@@ -1,8 +1,10 @@
 from flask_restful import Resource, request
 
 from dtos.registro_dto import LoginDTO, RegistroDTO, UsuarioResponseDTO
+from dtos.usuario_dto import ResetPasswordRequestDTO
 from models.usuarios import Usuario
-from config import conexion
+from config import conexion, sendgrid
+from sendgrid.helpers.mail import Email, To, Content, Mail
 
 class RegistroController(Resource):
   def post(self):
@@ -39,5 +41,34 @@ class LoginController(Resource):
     except Exception as e:
       return {
         'message': 'Credenciales incorrectas',
+        'content': e.args
+      }
+
+class ResetPasswordController(Resource):
+  def post(self):
+    body = request.get_json()
+    try:
+      data = ResetPasswordRequestDTO().load(body)
+      usuarioEncontrado = conexion.session.query(Usuario).filter_by(correo=data.get('correo')).first()
+      if usuarioEncontrado is not None:
+        from_email = Email('carlos.ademir_66@hotmail.com')
+        to_email = To(usuarioEncontrado.correo)
+        subject = 'Reinicia tu contraseña del Monedero App'
+        content = Content('text/plain', 'Hola, has solicitado el reincio de tu contraseña, haz click en el siguiente enlace para cambiar, sino has sido tu ignorar este mensaje, ...')
+        mail = Mail(from_email, to_email,subject, content)
+        envia_correo = sendgrid.client.mail.send.post(request_body=mail.get())
+        # el estado de la respuesta de sendgrid
+        print (envia_correo.status_code)
+        # el cuerpo de la respuesta de sendgrid
+        print (envia_correo.body)
+        # los cabeceros de la respuesta de sendgrid
+        print (envia_correo.headers)
+
+      return {
+        'message':'Correo enviado exitosamente'
+      }
+    except Exception as e:
+      return {
+        'message':'Error al resetear la password',
         'content': e.args
       }

@@ -6,7 +6,6 @@ from os import environ
 from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_jwt import JWT, jwt_required, current_identity
-from dtos.registro_dto import UsuarioResponseDTO
 
 # archivos globales
 from config import validador, conexion
@@ -18,6 +17,7 @@ from controllers.usuarios import (  RegistroController,
                                     LoginController,
                                     ResetPasswordController )
 from controllers.movimientos import MovimientoController
+from dtos.registro_dto import UsuarioResponseDTO #ejemplo
 
 load_dotenv()
 

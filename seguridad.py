@@ -1,6 +1,8 @@
-from config import conexion
-from models.usuarios import Usuario
 from bcrypt import checkpw
+
+from config import conexion
+
+from models.usuarios import Usuario
 
 def autentificador(username, password):
   """ Función encargada de validar si las credenciales son correctas o no, si no son no pasara pero si si loson retornara una JWT """

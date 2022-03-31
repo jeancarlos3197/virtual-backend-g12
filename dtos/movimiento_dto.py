@@ -1,5 +1,5 @@
-from marshmallow_sqlalchemy import auto_field
 from marshmallow import fields
+from marshmallow_sqlalchemy import auto_field
 
 from config import validador
 

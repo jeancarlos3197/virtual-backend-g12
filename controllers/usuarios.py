@@ -1,3 +1,4 @@
+import json
 from flask_restful import Resource, request
 from flask_jwt import jwt_required
 # from sendgrid.helpers.mail import Email, To, Content, Mail
@@ -5,6 +6,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from smtplib import SMTP
 from os import environ
+from cryptography.fernet import Fernet
+from datetime import datetime, timedelta
 
 from config import conexion, sendgrid
 
@@ -64,7 +67,20 @@ class ResetPasswordController(Resource):
       if usuarioEncontrado is not None:
         texto = "Hola este es un mensaje de prueba."
         mensaje['Subject'] = 'Reinciar contraseña  Monedero App'
-        html = open('./email_templates/joshua_template.html').read().format(usuarioEncontrado.nombre, usuarioEncontrado.correo, environ.get('URL_FRONT'))
+        # encriptacion de informacion
+        fernet = Fernet(environ.get('FERNET_SECRET_KEY'))
+
+        mensaje_secreto = {
+          'fecha_caducidad': str(datetime.now()+timedelta(hours=1)),
+          'id_usuario':usuarioEncontrado.id
+        }
+
+        mensaje_secreto_str = json.dumps(mensaje_secreto)
+        mensaje_encriptado = fernet.encrypt(bytes(mensaje_secreto_str, 'utf-8'))
+
+        # FIN DE ENCRIPTACION
+        print(environ.get('URL_FRONT')+'/reset-password?token='+mensaje_encriptado.decode('utf-8'))
+        html = open('./email_templates/joshua_template.html').read().format(usuarioEncontrado.nombre, environ.get('URL_FRONT')+'/reset-password?token='+mensaje_encriptado.decode('utf-8'))
         # siempre que queramos agregar un HTML como texto del mensaje tiene que ir despues del texto ya que rimerotratara de enviar el ultimo y si no puede envuara el anterior
         # mensaje.attach(MIMEText(texto, 'plain'))
         mensaje.attach(MIMEText(html, 'html'))

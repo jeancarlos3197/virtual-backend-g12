@@ -1,11 +1,14 @@
 # librerias 
 from datetime import timedelta
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_restful import Api
 from os import environ
 from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_jwt import JWT, jwt_required, current_identity
+from cryptography.fernet import Fernet
+from datetime import datetime
+import json
 
 # archivos globales
 from config import validador, conexion
@@ -18,6 +21,7 @@ from controllers.usuarios import (  RegistroController,
                                     ResetPasswordController )
 from controllers.movimientos import MovimientoController
 from dtos.registro_dto import UsuarioResponseDTO #ejemplo
+from models.usuarios import Usuario
 
 load_dotenv()
 
@@ -72,6 +76,8 @@ def inicio():
     'timado':True
   }])
 
+
+
 #al colocar jwt_required() estamos indicando que para ese controlador se debera de proveer una JWT valida
 @app.route('/yo')
 @jwt_required()
@@ -82,6 +88,47 @@ def perfil_usuario():
     'message':'El usuario es',
     'content': usuario
   }
+
+@app.route('/validar-token', methods=['POST'])
+def validar_token():
+  # TODO: tarea agregar el dto para solo recibir la token en el body, la token tiene que ser un string
+  body = request.get_json()
+  token = body.get('token')
+  fernet = Fernet(environ.get('FERNET_SECRET_KEY'))
+  try:
+    # el metodo decrypt se usa para decifrar la token previamente encriptada si no se puede, se emitira un error que sera capturado por el except
+    # token la conv a bytes / el resultado de bytes la convierte a str
+    data = fernet.decrypt(bytes(token, 'utf-8')).decode('utf-8')
+    print(data)
+    diccionario = json.loads(data)
+    fecha_caducidad = datetime.strptime(diccionario.get('fecha_caducidad'), '%Y-%m-%d %H:%M:%S.%f')
+    hora_actual = datetime.now()
+    if fecha_caducidad > hora_actual:
+      print('todavia hay tiempo')
+      # buscar ese usuario en la bd y retornar al frontend el nombre del usuario
+      # SELECT correo from usuarios;
+      # with_entities indicara que columnas  queremos de determinado modelo o modelos
+      usuarioEncontrado = conexion.session.query(Usuario).with_entities(Usuario.correo).filter_by(id = diccionario.get('id_usuario')).first()
+      if usuarioEncontrado:
+        return {
+          'message':'Correct',
+          'content': {
+            'correo': usuarioEncontrado.correo
+          }
+        }
+      else:
+        return {
+          'message':'Usuario no existe'
+        }, 400
+    else:
+      return {
+        'message': 'Token caducado'
+      }, 400
+  except Exception as e:
+    return {
+      'mensaje':'Token incorrecto',
+    }, 400
+
 
 api.add_resource(RegistroController, '/registro')
 api.add_resource(LoginController, '/login')

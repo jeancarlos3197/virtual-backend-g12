@@ -9,3 +9,7 @@ pip freeze > requirements.txt  >> crea en texto mis librerias con sus versiones
 pip install -r requirements.txt > instalara todas las librerias guardadas en el texto con su version 
 python -m pip install --upgrade pip >> actualizar la libreria pip
 pip install python-dotenv > variable de entorno
+
+python -m unittest test_prueba.py test / tests unitarios para nuestro proyecto
+
+https://strftime.org/

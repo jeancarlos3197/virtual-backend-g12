@@ -10,6 +10,6 @@ pip install -r requirements.txt > instalara todas las librerias guardadas en el 
 python -m pip install --upgrade pip >> actualizar la libreria pip
 pip install python-dotenv > variable de entorno
 
-python -m unittest test_prueba.py test / tests unitarios para nuestro proyecto
+python -m unittest <nombre del archivo> -v / tests unitarios para nuestro proyecto.
 
 https://strftime.org/

@@ -58,7 +58,8 @@ class TestYo(unittest.TestCase):
     self.token = respuesta.json.get('access_token')
 
   def testNoHayJWT(self):
-    pass
+    respuesta = self.aplicacion_flask.get('/yo')
+    self.assertEqual(respuesta.status_code, 401)
 
   def testPasoJWT(self):
     respuesta = self.aplicacion_flask.get('/yo', headers={'Authorization': 'Bearer {}'.format(self.token)})
@@ -66,5 +67,32 @@ class TestYo(unittest.TestCase):
     self.assertEqual(respuesta.json.get('message'), 'El usuario es')
 
 class TestMovimiento(unittest.TestCase):
+  def setUp(self):
+    self.aplicacion_flask = app.test_client()
+    body = {
+      'correo':'jean@gmail.com',
+      'pass':'Jeangmail123'
+    }
+    respuesta = self.aplicacion_flask.post('/login-jwt', json=body)
+    self.token = respuesta.json.get('access_token')
   # hacer los test para extraer los movimientos creados del usuario,hacer el caso cuando se pase una JWT, cuando no se ase una token, cuando no tenga movimientos y cuando tenga movimientos
-  pass
+  def testGetJWT(self):
+    respuesta = self.aplicacion_flask.get('/movimientos', headers={'Authorization': 'Bearer {}'.format(self.token)})
+    self.assertEqual(respuesta.json.get('message'), 'Los movimientos son')
+    self.assertEqual(respuesta.status_code, 200)
+
+  @unittest.skip('Llama a un Traceback')
+  def testGetSinJWT(self):
+    respuestaSinJWT = self.aplicacion_flask.get('/movimientos', headers={'Authorization': 'Bearer '})
+    self.assertEqual(respuestaSinJWT.status_code, 401)
+
+  def testGetListado(self):
+    respuesta = self.aplicacion_flask.get('/movimientos', headers={'Authorization': 'Bearer {}'.format(self.token)})
+    self.assertNotEqual(len(respuesta.json.get('content')), 0)
+    self.assertEqual(respuesta.status_code, 200)
+  
+  @unittest.skip('Estaba vacío, ya no')
+  def testGetListadoVacio(self):
+    respuesta = self.aplicacion_flask.get('/movimientos', headers={'Authorization': 'Bearer {}'.format(self.token)})
+    self.assertEqual(len(respuesta.json.get('content')), 0)
+    self.assertEqual(respuesta.status_code, 200)

@@ -28,3 +28,9 @@ python manage.py showmigrations > muestra las migraciones creadas y que están o
 python manage.py migrate <aplicacion>(Opcional) > migra todas las aplicaciones a la bd
 
 python manage.py startapp > creara la aplicación del proyecto, en este caso seria como vistas
+---------------------------
+Aplicacion
+admin.py
+apps.py
+models.py todos los modelos relacionado con la aplicacion
+views.py vistas relacionado con la aplicacion

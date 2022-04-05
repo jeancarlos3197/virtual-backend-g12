@@ -1,6 +1,6 @@
 import json
 from flask_restful import Resource, request
-from flask_jwt import jwt_required
+from flask_jwt import jwt_required, current_identity
 # from sendgrid.helpers.mail import Email, To, Content, Mail
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -11,8 +11,11 @@ from datetime import datetime, timedelta
 
 from config import conexion, sendgrid
 
-from dtos.registro_dto import LoginDTO, RegistroDTO, UsuarioResponseDTO
-from dtos.usuario_dto import ResetPasswordRequestDTO
+from dtos.registro_dto import ( LoginDTO, 
+                                RegistroDTO, 
+                                UsuarioResponseDTO  )
+from dtos.usuario_dto import (  ResetPasswordRequestDTO, 
+                                ChangePassworRequestDTO )
 from models.usuarios import Usuario
 
 class RegistroController(Resource):
@@ -52,6 +55,30 @@ class LoginController(Resource):
         'message': 'Credenciales incorrectas',
         'content': e.args
       }
+
+class ChangePasswordController(Resource):
+  @jwt_required()
+  def put(self):
+    body = request.get_json()
+    try:
+      data = ChangePassworRequestDTO().load(body)
+      usuario = Usuario.query.filter_by(id=current_identity.id).first()
+      if usuario.password:
+        usuario.password = data.get('new_password')
+        usuario.encriptar_pwd()
+        conexion.session.commit()
+        return {
+          'message': 'Contraseña actualizada'
+        }, 200
+      else:
+        return {
+          'message': 'Contraseña actual incorrecta'
+        }, 400
+    except Exception as e:
+      return {
+        'message': 'Error al actualizar contraseña',
+        'content': e.args
+      }, 400
 
 class ResetPasswordController(Resource):
   def post(self):

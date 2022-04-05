@@ -56,7 +56,6 @@ def seed():
   # ahora hacemos el seed de las tablas respectivas
   categoriaSeed()
 
-
 @app.route('/')
 def inicio():
   # render_template renderiza un archivo .html o .jinja para que flask lo pueda leer en interpretar al cliente

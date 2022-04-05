@@ -1,0 +1,30 @@
+CLI > Interfaz de Linea de comandos (Command Line Interface)
+Todos los comandos de django se realizan mediante el comando 'django-admin'
+
+django-admin startproject NOMBRE_PROYECTO > creara un nuevo proyecto con los archivos necesarios para django
+
+wsgi.py > servidor wsgi no se toca
+asgi.py > servidro asgi no se toca
+manage.py = app.py > ejecuta tareas
+setting.py > configuraciones
+urls.py > sirve para las rutas
+
+python manage.py > no hara nada mostrara informacion
+
+settings.py
+'default': {
+  'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+  'NAME': 'agenda', #nombre de la bd
+  'USER': 'root', #usuario del servidor
+  'PASSWORD': 'Aa123', #contraseña del servidor
+  'PORT': '3306', #puerto del servidor
+  'HOST': 'localhost', #direccion del servidor
+}
+
+python manage.py runserver > levantar el proyecto en Django
+
+python manage.py showmigrations > muestra las migraciones creadas y que están o no ejecutadas
+
+python manage.py migrate <aplicacion>(Opcional) > migra todas las aplicaciones a la bd
+
+python manage.py startapp > creara la aplicación del proyecto, en este caso seria como vistas

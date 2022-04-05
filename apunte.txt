@@ -1,0 +1,7 @@
+https://strftime.org/
+python -m venv <nombre_entorno> > crea un entorno virtual
+(source optional for mac or linux) .\entorno_flask\Scripts\activate > Activar entorno
+pip install <libreria> >Instala la libreria 
+             flask-cors > cors
+entorno_django/Scripts/activate
+pip install django

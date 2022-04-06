@@ -1,3 +1,17 @@
-from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.request import Request
 
-# Create your views here.
+# https://www.django-rest-framework.org/api-guide/requests/
+@api_view(http_method_names=['GET', 'POST'])
+def inicio(request: Request):
+  # request sera toda la informacion enviada por el cliente
+  if request.method == 'GET':
+    return Response(data= {
+      'message': 'Hiciste una peticion GET'
+    }, status=200)
+
+  elif request.method == 'POST':
+    return Response(data= {
+      'message': 'Hiciste una peticion POST'
+    }, status=201)

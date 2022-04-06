@@ -34,3 +34,8 @@ admin.py
 apps.py
 models.py todos los modelos relacionado con la aplicacion
 views.py vistas relacionado con la aplicacion
+---------------------------
+
+py .\manage.py makemigrations gestion --name Creacion_Tabla_Etiquetas > crea la migracion (poner el nombre de la aplicacion y nombre de la migracion) con todos los cambios que se habran hecho en el ORM
+
+py .\manage.py sqlmigrate gestion 0001 > mostrará el sql de la migración creada

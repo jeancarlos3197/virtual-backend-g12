@@ -44,7 +44,13 @@ class Tareas(models.Model):
   createdAt = models.DateTimeField(auto_now_add=True, db_column='created_at')
   updatedAt = models.DateTimeField(auto_now=True, db_column='updated_at')
   # en django se puede utilizar las relaciones one-to-one, one-to-many o many-to-many para crear relaciones entre tablas
+  # https://docs.djangoproject.com/en/4.0/ref/models/fields/#imagefield
   etiquetas = models.ManyToManyField(Etiqueta, db_table='tareas_etiquetas', related_name='tareas')
+  # el imageField guardara la ubicacion en dodne la ubicacion donde se lamacedna en el servidor
+  foto = models.ImageField(
+    upload_to='multimedia',
+    null=True    
+  )
 
   class Meta:
     db_table = 'tareas'

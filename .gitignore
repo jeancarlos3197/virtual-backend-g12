@@ -1,3 +1,8 @@
 entorno_django
 __pycache__/
 .env
+# Archivos de imagenes
+*.jpg
+*.png
+*.gif
+*.jpeg

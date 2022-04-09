@@ -12,7 +12,8 @@ class PruebaSerializer(serializers.Serializer):
 
 # https://www.django-rest-framework.org/api-guide/serializers/#modelserializer
 class TareasSerializer(serializers.ModelSerializer):
-  
+  # Modifico la configuración del modelo y le puedo setear la nueva configuracion que respetera el serializador, no se puede hacer cambios de tipos de datos muy drasticos (x ejemplo: si en el modelo es un IntegerField en el serializador no podre cambiarlo a CharField porque me lanzara un error al momento de guardar la data)
+  foto = serializers.CharField(max_length=100)
   class Meta:
     model = Tareas
     fields = '__all__' #estara indicando que columnas va a utilizar __all__ para usar todas
@@ -63,5 +64,10 @@ class EtiquetaSerializer(serializers.ModelSerializer):
     # los campos del modelo que solamente quiero que sean lectura los padre definir en una lista
     read_only_fields = ['createdAt']
 
+
+class ArchivoSerializer(serializers.Serializer):
+  # max_length > indicara la logica maxima DEL NOMBRE del archivo
+  # use_url > si es verdadero retornara el link completo de la ubicación del archivo, caso contrario solo retornara la ubicación dentro del proyecto del archivo
+  archivo = serializers.ImageField(max_length=100, use_url=True)
 
     

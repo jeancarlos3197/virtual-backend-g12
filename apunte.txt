@@ -6,4 +6,6 @@ pip install <libreria> >Instala la libreria
 entorno_django/Scripts/activate
 pip install django
 
+python manage.py test > corre todos los test definidos en los archivos tests.py de cada aplicacion ademas crea una base de datos de prueba para los test y adicionalmente se puede colocar -v o --verbosity que servira para indicar el grado de definicion de la ejecucion de los tests siendo 0 el mas corto y 3 el mas explicito, ademas se puede agregar el nombre de la aplicacion para que solo se corra esos tests y mas a detalle poner el nombre del archivo ademas se puede poner la clase hasta colocar el nombre de que unico test se desea correr dentro de la clase
+
 guardar la imagen en la bd no es recomendable, ya que normalmente la bd hace copias de seguridad, esto haría una suma de memoria excesiva durante la copía.

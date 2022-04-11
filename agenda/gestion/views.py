@@ -6,7 +6,8 @@ from rest_framework.request import Request
 from rest_framework.generics import ( ListAPIView, 
                                       ListCreateAPIView, 
                                       RetrieveUpdateDestroyAPIView,
-                                      CreateAPIView, )
+                                      CreateAPIView,
+                                      DestroyAPIView, )
 # son un conjunto de librerias que django nos provee para poder utilizar de una manera mas rapida ciertas configuraciones, timezone sirve para en base a la configuracion que colocamos en el settings.py TIME_ZONE se basata en esta para darnos a hora y fecha con esa configuracion
 from django.utils import timezone
 # https://docs.djangoproject.com/es/4.0/_modules/django/core/files/uploadedfile/
@@ -14,12 +15,16 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 # https://docs.djangoproject.com/en/4.0/topics/files/#storage-objects
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from django.conf import settings
+from os import remove
 
 from .serializers import (  PruebaSerializer, 
                             TareasSerializer,
                             TareaSerializer,
+                            TareaPersonalizableSerializer,
                             EtiquetaSerializer,
-                            ArchivoSerializer,)
+                            ArchivoSerializer,
+                            EliminarArchivoSerializer,)
 from .models import Tareas, Etiqueta
 
 # https://www.django-rest-framework.org/api-guide/requests/
@@ -118,12 +123,23 @@ class ArchivosApiView(CreateAPIView):
   serializer_class= ArchivoSerializer
   def post(self, request:Request):
     data = self.serializer_class(data=request.FILES)
+
+    query_params = request.query_params
+    carpetaDestino = query_params.get('carpeta')
+
     if data.is_valid():
       print(data.validated_data.get('archivo'))
       archivo: InMemoryUploadedFile = data.validated_data.get('archivo')
       print(archivo.name)
+      if archivo.size > (5 * 1024 * 1024):
+        return Response( data={
+          'message': 'Archivo muy grande, no puede ser mas de 5Mb'
+        }, status=status.HTTP_406_NOT_ACCEPTABLE) 
       # el metodo read() sirve para leer el archivo PEERO la lectura la lectura hara que tambien se elimine de la memoria tempoeral por ende no se puede llamar dos o mas veces a este metodo ya que la segunda ya no lo tendremos archivo que mostrar
-      resultado = default_storage.save('imagenes/'+archivo.name, ContentFile(archivo.read()))
+      resultado = default_storage.save(
+        # usar operador ternario para que si es que la carpetaDestino no es None ponerla caso contrario poner ''
+        (carpetaDestino+'/' if carpetaDestino is not None else '') +
+        archivo.name, ContentFile(archivo.read()))
       print(resultado)
       return Response(data={
         'message': 'Archivo guardado exitosamente',
@@ -136,3 +152,28 @@ class ArchivosApiView(CreateAPIView):
         'message': 'Error al subir la imagen',
         'content': data.errors
       }, status=status.HTTP_400_BAD_REQUEST)
+
+class EliminarArchivoApiView(DestroyAPIView):
+  # El generico DestroyApiView solicita una pk como parametro de la url para eliminar un determinado registro de un modelo pero se personalizara para no recibir ello
+  serializer_class = EliminarArchivoSerializer
+
+  def delete(self, request:Request):
+    data = self.serializer_class(data=request.data)
+    
+    try:
+      if data.is_valid():
+        ubicacion = data.validated_data.get('archivo')
+        remove(settings.MEDIA_ROOT / ubicacion)
+        return Response(data={
+          'message': 'Archivo eliminado exitosamente',
+        })
+      else:
+        return Response(data={
+          'message':'Error al eliminar el archivo',
+          'content':data.errors
+        })
+    except Exception as e:
+      return Response(data={
+        'message':'No se encontro el archivo a eliminar',
+        'content':e.args
+      }, status=status.HTTP_404_NOT_FOUND)

@@ -135,5 +135,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/archivos/'
 
 # acepta arrays
-# sirve para ubicar de donde se extraeran los archivos solicitados por la url
+# sirve para ubicar de donde se extraeran los archivos solicitados por la url y ademas donde se almaceran los archivo mediante el metodo default_storage
 MEDIA_ROOT = BASE_DIR / 'imagenes'

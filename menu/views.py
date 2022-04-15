@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
 
-# Create your views here.
+from .models import Plato
+from .serializers import PlatoSerializer
+class PlatoCreateApiView(CreateAPIView):
+  serializer_class = PlatoSerializer
+  queryset = Plato.objects.all()

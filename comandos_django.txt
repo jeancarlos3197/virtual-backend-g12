@@ -45,3 +45,4 @@ py .\manage.py dbshell > Abre la terminal con el mysql
 python manage.py createsuperuser > crea un superusuario para que pueda utilizado en el panel administrativo
 
 validaciones y login: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/
+https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html

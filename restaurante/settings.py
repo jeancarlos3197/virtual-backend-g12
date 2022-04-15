@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'cloudinary',
     'autorizacion',
     'fact_electr',
     'menu',
@@ -147,5 +148,6 @@ REST_FRAMEWORK = {
 
 # sirve para modificar las configuraciones iniciales de simplejwt
 SIMPLE_JWT= {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1, minutes=5),
+    'ALGORITHM': 'HS384',
 }

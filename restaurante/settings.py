@@ -14,6 +14,13 @@ from datetime import timedelta
 from pathlib import Path
 from os import environ
 from dotenv import load_dotenv
+# https://cloudinary.com/documentation/django_integration#installation
+# para crear la configuracion  entre mi proyecto y cloudinary
+import cloudinary
+# indicar que subire imagenes
+import cloudinary.uploader
+# usar la api de cloudinary
+import cloudinary.api
 
 load_dotenv()
 
@@ -151,3 +158,9 @@ SIMPLE_JWT= {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1, minutes=5),
     'ALGORITHM': 'HS384',
 }
+
+cloudinary.config(
+    cloud_name=environ.get('CLOUDINARY_NAME'),
+    api_key=environ.get('CLOUDINARY_KEY'),
+    api_secret=environ.get('CLOUDINARY_SECRET'),
+)

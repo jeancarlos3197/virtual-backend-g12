@@ -1,3 +1,4 @@
 entorno_auth/
 .env
 __pycache__/
+ entorno_django/

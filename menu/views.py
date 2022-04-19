@@ -9,8 +9,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from cloudinary import CloudinaryImage
 
-from .models import Plato
-from .serializers import PlatoSerializer
+from .models import Plato, Stock
+from .serializers import PlatoSerializer, StockSerializer
+from .permissions import SoloAdminPuedeEscribir
 
 class PlatoApiView(ListCreateAPIView):
   serializer_class = PlatoSerializer
@@ -28,3 +29,8 @@ class PlatoApiView(ListCreateAPIView):
     return Response(data={
       'status': data.data,
     }, status=status.HTTP_200_OK)
+
+class StockApiView(ListCreateAPIView):
+  serializer_class= StockSerializer
+  queryset=Stock.objects.all()
+  permission_classes = [IsAuthenticated, SoloAdminPuedeEscribir]

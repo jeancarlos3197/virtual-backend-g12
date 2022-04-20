@@ -1,15 +1,16 @@
 from django.db import models
+from django.utils import timezone
 
 from autorizacion.models import Usuario
 from menu.models import Stock
 
 class Pedido(models.Model):
   id = models.AutoField(primary_key=True)
-  fecha = models.DateTimeField()
+  fecha = models.DateTimeField(default=timezone.now)
   total = models.FloatField(null = False)
-  numeroDocumentoCliente = models.CharField(max_length=12)
-  tipoDocumentoCliente = models.CharField(choices=(['RUC', 'RUC'], ['DNI', 'DNI']), max_length=5)
-  mesa = models.IntegerField()
+  numeroDocumentoCliente = models.CharField(max_length=12, null=True)
+  tipoDocumentoCliente = models.CharField(choices=(['RUC', 'RUC'], ['DNI', 'DNI']), max_length=5, null=True)
+  mesa = models.IntegerField(null=False)
   propina = models.FloatField()
 
   usuarioId = models.ForeignKey(to=Usuario, related_name='pedidos', on_delete=models.CASCADE, db_column='usuario_id')

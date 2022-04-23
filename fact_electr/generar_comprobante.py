@@ -12,6 +12,20 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
     https://docs.google.com/document/d/1QWWSILBbjd4MDkJl7vCkL2RZvkPh0IC7Wa67BvoYIhA/edit
   """
   pedido = Pedido.objects.filter(id = pedido_id).first()
+  #forma facil
+  validacionComprobante =  Comprobante.objects.filter(pedido=pedido.id).first()
+
+  if validacionComprobante:
+    raise Exception('Este pedido ya tiene un comprobante')
+
+  #Froma sin hacer una segundacondicion
+  # try:
+  #   if pedido.comprobante is not None:
+  #     raise Exception('Este pedido ya tiene un comprobante')
+  
+  # except Pedido.comprobante.RelatedObjectDoesNotExist:
+  #   pass
+
   if pedido is None:
     raise Exception('Pedido no existe')
   
@@ -154,10 +168,26 @@ def generar_comprobante(tipo_de_comprobante: int, tipo_documento: str, numero_do
     'items':items
   }
   url_nubefact= environ.get('NUBEFACT_URL')
+
   headers_nubefact= {
     'Authorization': environ.get('NUBEFACT_TOKEN'),
     'Content-Type': 'application/json',
   }
+
   respuestaNubefact = requests.post(url_nubefact,headers=headers_nubefact, json=comprobante_body)
-  print(respuestaNubefact.json())
+
+  if respuestaNubefact.json().get('errors'):
+    raise Exception(respuestaNubefact.json().get('errors'))
+
+  else:
+    nuevoComprobante = Comprobante(
+      serie=serie, 
+      numero=numero, 
+      pdf=respuestaNubefact.json().get('enlace_del_pdf'), 
+      cdr=respuestaNubefact.json().get('enlace_del_cdr'), 
+      xml=respuestaNubefact.json().get('enlace_del_xml'),  
+      tipo=tipo, 
+      pedido=pedido)
+    nuevoComprobante.save()
+    return nuevoComprobante
 

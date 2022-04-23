@@ -35,9 +35,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&dxzvas@-j7m*cxy6808$bsc2&z*935m@8+bm92@#vg#!t&p*^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = False
+# Host que van a poder levantar la API
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 # Application definition
@@ -49,16 +49,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Librerias
     'rest_framework',
     'cloudinary',
+    'corsheaders',
+    # Aplicaciones
     'autorizacion',
     'fact_electr',
     'menu',
 ]
 
+# esta en la documentacion http://whitenoise.evans.io/en/stable/
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # agregar el middleware de los cors hasta antes del CommonMiddleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -164,3 +171,17 @@ cloudinary.config(
     api_key=environ.get('CLOUDINARY_KEY'),
     api_secret=environ.get('CLOUDINARY_SECRET'),
 )
+
+# esta en la documentacion http://whitenoise.evans.io/en/stable/
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# para saber donde se guardaran los archivos estaticos(css, js, imagenes)usados por DRF, y el panel administrativo
+# se usa para cuando corramos el comando 'python manage.py collectstatic'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# CORS_ORIGIN_ALLOW_ALL=True
+# son los origenes permitidos si queremos usar todos usaremos LO DE ARRIBA
+CORS_ALLOWED_ORIGINS=['http://127.0.0.1:5500']
+# son los metodos permitidos, por defecto son todas
+CORS_ALLOWED_METHODS=['GET','POST'] # no podrá > PUT | DELETE
+# Son las cabeceras permitidas, por defecto todas
+CORS_ALLOWED_HEADERS=['content-type','authorization','origin']

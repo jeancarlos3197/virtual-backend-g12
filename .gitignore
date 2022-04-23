@@ -1,5 +1,6 @@
 entorno_django
 staticfiles
+frontend
 __pycache__/
 .env
 # Archivos de imagenes

@@ -1,8 +1,0 @@
-Para ver los comandos: https://www.postgresql.org/docs/current/app-psql.html
-psql -U USER -h HOST -d DATABASE -p PORT > conectarse a un servidor externo
-\l > listar las bases de datos.
-\c (base de datos) > cambias de base de datos.
-\q > termina la sesión
-
-
-https://www.postgresql.org/docs/current/app-psql.html

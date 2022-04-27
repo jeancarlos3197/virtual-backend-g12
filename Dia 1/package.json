@@ -1,0 +1,17 @@
+{
+  "name": "pruebas-node",
+  "version": "1.0.0",
+  "description": "mi primer proyecto de node ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "node.js",
+    "backend",
+    "codiGO"
+  ],
+  "author": "Jean Carlos A",
+  "license": "ISC"
+}

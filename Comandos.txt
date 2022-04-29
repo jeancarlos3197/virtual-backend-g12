@@ -1,0 +1,8 @@
+npm install prisma --save-dev  > instalamos
+npm install nodemon --save-dev > instalamos
+
+npx prisma init > Iniciamos el proyecto prisma
+>> configuramos nuestro .env, creamos nuestros modelos y relaciones en prisma/schema.prisma
+psql -U postgres > creamos nuestra base de datos
+
+npx prisma migrate dev > migramos XD

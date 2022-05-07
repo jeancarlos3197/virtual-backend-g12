@@ -1,4 +1,8 @@
 db => mostrara en que base de datos estamos trabajando
 use NOMBRE_DB => nos moveremos a esa base de datos y si no existe la creará.
-
+show dbs => mostrará todas las bases de datos que tenemos.
+db.dropDatabase() => borrará la base de datos que este ubicado
 db.TABLA.insertOne({...}) => insertara un nuevo registro en esa coleccion (TABLA)en la bd y si no existe, la creara
+db.TABLA.find() => listará los registros de la tabla.
+//LIKE
+db.TABLA.find({columna: /x/}) => en cualquier parte de la columna estara la letra x

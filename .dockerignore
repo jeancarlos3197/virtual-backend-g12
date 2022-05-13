@@ -1,0 +1,5 @@
+# que archivo no tiene que copiar
+node_modules/
+.env
+apuntes-mongo.txt
+Dockerfile

@@ -6,3 +6,9 @@ db.TABLA.insertOne({...}) => insertara un nuevo registro en esa coleccion (TABLA
 db.TABLA.find() => listará los registros de la tabla.
 //LIKE
 db.TABLA.find({columna: /x/}) => en cualquier parte de la columna estara la letra x
+
+docker build . --tag express-con-mongo > construye la imagen de tu proyecto, el . indica todo el proyecto, --tag es para darle un nombre
+docker run -it -p 5000:3000 express-con-mongo > manda a correr el docker, -it observa el docker, -p 5000:3000 indica el puerto entrante y saliente
+docker rmi express-con-mongo --force > eliminamos la imagen
+docker-compose up > levanta el docker pero con contenedores?
+docker exec -it 73b bash > ejecuta el contenedor de mongo en primer plano(-it) con los 3 primeros digitos del id(73b) bash

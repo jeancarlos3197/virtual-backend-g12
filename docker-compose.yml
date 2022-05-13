@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  api-librero:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:3000
+    # el contenido este en el contenedor se base en una ubicacion de nustra maquina
+    volumes:
+      # lo que tenga en la carpeta src localmente sera la misma y todos los cambios se haran en el contenedor en la ubicacion /app/src donde /app/ es el WORKDIR que definimos en el Dockerfile
+      - ./src:/app/src
+    depends_on:
+      - basededatos-mongo
+    env_file: .env
+    environment:
+      - MONGO_URL=mongodb://jean:Welcome123!@basededatos-mongo:27017
+      - DBNAME=librero
+
+  basededatos-mongo:
+    image: mongo:latest
+    ports:
+      # puerto externo:puerto interno
+      - 3000:27017
+    environment:
+      # manera de enviarlo como array
+      - MONGO_INITDB_ROOT_USERNAME=jean
+      - MONGO_INITDB_ROOT_PASSWORD=Welcome123!
+      - MONGO_INITDB_DATABASE=librero
+      # manera de enviarlo como json
+      # MONGO_INITDB_ROOT_USERNAME: jean
+      # MONGO_INITDB_ROOT_PASSWORD: Welcome123!
+      # MONGO_INITDB_DATABASE: librero
